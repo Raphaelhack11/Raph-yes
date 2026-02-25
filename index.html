@@ -53,6 +53,11 @@
         }
         .logo-wrapper img { max-width: 100%; max-height: 100%; object-fit: contain; }
         
+        .form-dot { width: 18px; height: 18px; border-radius: 4px; display: inline-flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 900; }
+        .win { background: #10b981; color: white; }
+        .draw { background: #f59e0b; color: white; }
+        .loss { background: #ef4444; color: white; }
+
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
@@ -68,7 +73,7 @@
             <div class="max-w-7xl mx-auto flex flex-col gap-4">
                 <div class="flex justify-between items-center">
                     <div class="flex items-center gap-2 cursor-pointer" onclick="showPage('home')">
-                        <div class="bg-blue-600 p-2 rounded-xl">
+                        <div class="bg-blue-600 p-2 rounded-xl shadow-lg shadow-blue-600/30">
                             <i class="fas fa-bolt text-white"></i>
                         </div>
                         <h1 class="text-2xl font-black text-white tracking-tighter uppercase">RAPH<span class="text-blue-500">BETS</span></h1>
@@ -79,11 +84,6 @@
                         SPORTY CODES
                     </button>
                 </div>
-                <div id="searchContainer" class="relative">
-                    <i class="fas fa-search absolute left-5 top-1/2 -translate-y-1/2 text-slate-500"></i>
-                    <input type="text" id="searchInput" placeholder="Search team, league or code..." 
-                        class="w-full bg-slate-900 border border-slate-700/50 rounded-2xl py-3.5 pl-14 pr-6 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm text-white">
-                </div>
             </div>
         </nav>
 
@@ -91,7 +91,7 @@
         <div id="homePage" class="max-w-7xl mx-auto px-4 mt-8 pb-20 animate-in">
             <div class="mb-8 flex justify-between items-end">
                 <div>
-                    <h2 class="text-2xl font-extrabold text-white italic">Live Fixtures</h2>
+                    <h2 class="text-2xl font-extrabold text-white italic">Premium Fixtures</h2>
                     <p id="dateDisplay" class="text-slate-500 text-xs mt-1 font-bold uppercase tracking-widest"></p>
                 </div>
             </div>
@@ -117,7 +117,7 @@
                         <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
                         <span class="relative inline-flex rounded-full h-3 w-3 bg-blue-500"></span>
                     </span>
-                    <span class="text-xs font-bold text-white">Next code in 30 minutes</span>
+                    <span class="text-xs font-bold text-white uppercase tracking-tighter">Next code in 30 minutes</span>
                 </div>
             </div>
 
@@ -134,27 +134,147 @@
 
     <!-- Prediction Modal -->
     <div id="modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4 bg-black/95 backdrop-blur-md">
-        <div class="glass w-full max-w-2xl rounded-[2.5rem] overflow-hidden flex flex-col max-h-[85vh]">
+        <div class="glass w-full max-w-2xl rounded-[2.5rem] overflow-hidden flex flex-col max-h-[90vh]">
             <div class="p-6 border-b border-white/5 flex justify-between items-center bg-slate-900/50">
-                <h3 class="font-black text-white italic">MATCH ANALYSIS</h3>
-                <button onclick="closeModal()" class="text-slate-500 text-xl"><i class="fas fa-times"></i></button>
+                <h3 class="font-black text-white italic tracking-widest">PRO SCOUTING REPORT</h3>
+                <button onclick="closeModal()" class="text-slate-500 text-xl hover:text-white transition-colors"><i class="fas fa-times"></i></button>
             </div>
-            <div id="modalBody" class="p-8 overflow-y-auto"></div>
+            <div id="modalBody" class="p-6 md:p-8 overflow-y-auto"></div>
         </div>
     </div>
 
     <script>
         const matches = [
-            { id: 1, league: "UEFA Champions League", home: "Atalanta", away: "Borussia Dortmund", time: "18:45", stage: "Playoffs", h2h: "1-1-1", reason: "Atalanta's home xG is 2.1 vs BVB's 1.4 away. High goal probability in Bergamo." },
-            { id: 2, league: "UEFA Champions League", home: "Juventus", away: "Galatasaray", time: "21:00", stage: "Playoffs", h2h: "JUV leads", reason: "Juventus defensive solidity at home is key. Galatasaray struggles in elite away fixtures." },
-            { id: 3, league: "UEFA Champions League", home: "PSG", away: "Monaco", time: "21:00", stage: "Playoffs", h2h: "PSG Domination", reason: "PSG front three are in peak form. Monaco missing key center-back via suspension." },
-            { id: 4, league: "UEFA Champions League", home: "Real Madrid", away: "Benfica", time: "21:00", stage: "Playoffs", h2h: "RMA 3W in 4", reason: "The 'Bernabeu Factor' in UCL is undeniable. Madrid's experience is superior here." },
-            { id: 5, league: "Brasileirão Betano", home: "Flamengo", away: "Mirassol", time: "POSTP", status: "Postponed", stage: "Matchday 4", reason: "Match rescheduled due to inclement weather and safety protocols." },
-            { id: 6, league: "CONMEBOL Libertadores", home: "Bahia", away: "O'Higgins", time: "23:00", stage: "Round 2", reason: "Bahia's high-altitude preparation and home support makes them favorites." },
-            { id: 7, league: "Morocco Botola", home: "Berkane", away: "Raja Club Athletic", time: "23:00", stage: "Matchday 7", reason: "Raja's away record is best in league. Berkane struggling with defensive depth." },
-            { id: 8, league: "CONCACAF Champions", home: "Nashville", away: "Atlético Ottawa", time: "FT", status: "Finished", score: "5-0" },
-            { id: 9, league: "Acreano", home: "Humaitá", away: "São Francisco", time: "FT", status: "Finished", score: "7-0" },
-            { id: 10, league: "Club Friendly", home: "Haugesund", away: "HamKam", time: "15:00", stage: "Pre-season", reason: "Fitness focus. High probability of rotation in second half." }
+            { 
+                id: 1, 
+                league: "UEFA Champions League", 
+                home: "Atalanta", 
+                away: "Borussia Dortmund", 
+                time: "18:45", 
+                h2h: "BVB 1W, ATA 1W, 1D (Last 3)", 
+                homeForm: ['W', 'W', 'L', 'W', 'W'],
+                awayForm: ['L', 'W', 'D', 'L', 'W'],
+                standing: "ATA: 4th (Serie A) | BVB: 5th (Bundesliga)",
+                lineups: "ATA: Carnesecchi, Djimsiti, Hien, Kolasinac, Bellanova, Ederson, De Roon, Ruggeri, De Ketelaere, Lookman, Retegui. <br><br> BVB: Kobel, Ryerson, Anton, Schlotterbeck, Bensebaini, Can, Gross, Sabitzer, Brandt, Gittens, Guirassy.",
+                reason: "Atalanta's offensive transition is arguably the best in Europe right now. Lookman's ability to pull defenders wide creates massive gaps for Retegui. BVB's midfield pivot of Can and Gross often struggles against high-intensity pressers. We expect a goal-fest in Bergamo." 
+            },
+            { 
+                id: 2, 
+                league: "UEFA Champions League", 
+                home: "Juventus", 
+                away: "Galatasaray", 
+                time: "21:00", 
+                h2h: "JUV 2W, GAL 1W (Last 3)", 
+                homeForm: ['W', 'D', 'W', 'W', 'W'],
+                awayForm: ['W', 'W', 'W', 'D', 'W'],
+                standing: "JUV: 2nd (Serie A) | GAL: 1st (Super Lig)",
+                lineups: "JUV: Di Gregorio, Savona, Kalulu, Gatti, Cambiaso, Locatelli, Thuram, Conceicao, Koopmeiners, Yildiz, Vlahovic. <br><br> GAL: Muslera, Jelert, Sanchez, Bardakci, Jakobs, Torreira, Sara, Ziyech, Mertens, Baris, Osimhen.",
+                reason: "Thiago Motta has built a fortress. Juventus have conceded the fewest goals in Europe's top 5 leagues. While Osimhen is a game-changer, Juve's tactical discipline in the final third should neutralize the supply line from Mertens." 
+            },
+            { 
+                id: 3, 
+                league: "UEFA Champions League", 
+                home: "PSG", 
+                away: "Monaco", 
+                time: "21:00", 
+                h2h: "PSG 3W, MON 0W, 2D (Last 5)", 
+                homeForm: ['W', 'W', 'W', 'L', 'W'],
+                awayForm: ['D', 'W', 'L', 'W', 'W'],
+                standing: "PSG: 1st (Ligue 1) | MON: 3rd (Ligue 1)",
+                lineups: "PSG: Safonov, Hakimi, Marquinhos, Pacho, Mendes, Vitinha, Ruiz, Neves, Dembele, Kolo Muani, Barcola. <br><br> MON: Majecki, Vanderson, Kehrer, Salisu, Caio, Zakaria, Camara, Akliouche, Minamino, Golovin, Embolo.",
+                reason: "A classic French rivalry on the big stage. PSG's pace on the wings with Barcola and Dembele will be the decider. Monaco plays a very high line which is often punished by the passing range of Vitinha and Neves." 
+            },
+            { 
+                id: 4, 
+                league: "UEFA Champions League", 
+                home: "Real Madrid", 
+                away: "Benfica", 
+                time: "21:00", 
+                h2h: "RMA 4W, BEN 0W (Historical)", 
+                homeForm: ['W', 'L', 'W', 'W', 'W'],
+                awayForm: ['W', 'W', 'D', 'W', 'L'],
+                standing: "RMA: 2nd (La Liga) | BEN: 2nd (Liga Portugal)",
+                lineups: "RMA: Courtois, Vazquez, Rudiger, Militao, Mendy, Valverde, Tchouameni, Bellingham, Rodrygo, Mbappe, Vinicius. <br><br> BEN: Trubin, Bah, Otamendi, Silva, Carreras, Florentino, Aursnes, Di Maria, Kokcu, Aktürkoğlu, Pavlidis.",
+                reason: "Bernabeu nights are legendary. Real Madrid's transition from defense to attack is lightning fast. Benfica's Otamendi may struggle for pace against Vinicius Jr in 1v1 situations." 
+            },
+            { 
+                id: 5, 
+                league: "Morocco Botola", 
+                home: "Berkane", 
+                away: "Raja Club Athletic", 
+                time: "23:00", 
+                h2h: "RAJA 2W, BERK 1W, 2D (Last 5)", 
+                homeForm: ['D', 'W', 'W', 'L', 'W'],
+                awayForm: ['W', 'W', 'W', 'W', 'D'],
+                standing: "BERK: 4th | RAJA: 1st",
+                lineups: "BERK: El Hamiani, Baadi, Tahif, Dayo, Lamssaoui, Camara, El Moussaoui, El Mourabit, Zghoudi, Bassene. <br><br> RAJA: Zniti, Boulaksout, Khafifi, Mkadazi, Belammari, Bouzok, Zrida, Ennaffati, Rahimi, Zerhouni.",
+                reason: "Raja is currently on an unbeaten streak of 12 matches. Their defensive coordination under pressure is unmatched in the Botola. Berkane is strong at home but lacks the creative spark." 
+            },
+            { 
+                id: 6, 
+                league: "CONMEBOL Libertadores", 
+                home: "Bahia", 
+                away: "O'Higgins", 
+                time: "23:00", 
+                h2h: "First competitive meeting", 
+                homeForm: ['W', 'L', 'W', 'D', 'W'],
+                awayForm: ['L', 'D', 'L', 'L', 'W'],
+                standing: "BAH: 6th (Serie A) | OHIG: 10th (Chile)",
+                lineups: "BAH: Marcos, Arias, Kanu, Duarte, Juba, Caio, Jean, Everton, Cauly, Thaciano, Everaldo. <br><br> OHIG: Carreño, Hormazábal, Torrealba, González, Díaz, Castillo, Moya, Fernández, Moreira, Arancibia.",
+                reason: "Bahia at the Fonte Nova is a different beast. O'Higgins has struggled with travel fatigue and altitude changes. Bahia's technical superiority in midfield should see them through comfortably." 
+            },
+            { 
+                id: 7, 
+                league: "Brasileirão Betano", 
+                home: "Flamengo", 
+                away: "Mirassol", 
+                time: "POSTP", 
+                h2h: "N/A", 
+                homeForm: ['W', 'W', 'W', 'W', 'W'],
+                awayForm: ['L', 'W', 'D', 'W', 'L'],
+                standing: "FLA: 1st | MIR: 12th",
+                lineups: "POSTPONED - No official lineups released.",
+                reason: "This match has been postponed due to stadium maintenance. All bets are usually voided after 48 hours of no play." 
+            },
+            { 
+                id: 8, 
+                league: "CONCACAF Champions", 
+                home: "Nashville", 
+                away: "Atlético Ottawa", 
+                time: "FT", 
+                h2h: "NSH leads 1-0", 
+                homeForm: ['W', 'W', 'D', 'W', 'L'],
+                awayForm: ['L', 'L', 'D', 'W', 'L'],
+                standing: "NSH: 7th (MLS) | OTT: 3rd (CPL)",
+                lineups: "NSH: Willis, Moore, Zimmerman, Maher, Lovitz, Davis, Godoy, Muyl, Mukhtar, Shaffelburg, Bunbury.",
+                reason: "Nashville's counter-attacking speed was too much for Ottawa. Mukhtar controlled the tempo from the first minute. Final Score: 5-0." 
+            },
+            { 
+                id: 9, 
+                league: "Acreano", 
+                home: "Humaitá", 
+                away: "São Francisco", 
+                time: "FT", 
+                h2h: "HUM 2W, 0D, 0L", 
+                homeForm: ['W', 'W', 'W', 'W', 'W'],
+                awayForm: ['L', 'L', 'L', 'L', 'L'],
+                standing: "HUM: 1st | SFO: 8th",
+                lineups: "Not recorded for regional league.",
+                reason: "A massive gap in professional resources. Humaitá scored 4 goals in the first 20 minutes. Final Score: 7-0." 
+            },
+            { 
+                id: 10, 
+                league: "Club Friendly", 
+                home: "Haugesund", 
+                away: "HamKam", 
+                time: "15:00", 
+                h2h: "1W each, 2D (Last 4)", 
+                homeForm: ['D', 'W', 'L', 'D', 'W'],
+                awayForm: ['W', 'L', 'L', 'W', 'D'],
+                standing: "Friendly Match - No Standings",
+                lineups: "Rotation squads expected for both sides to test youth prospects.",
+                reason: "Pre-season friendlies in Norway often feature high-scoring second halves as starters are subbed for inexperienced youth. Expect defensive lapses on both sides." 
+            }
         ];
 
         const sportyCodes = {
@@ -171,17 +291,24 @@
                 "Atalanta": "https://upload.wikimedia.org/wikipedia/en/thumb/6/66/AtalantaBC.svg/1200px-AtalantaBC.svg.png",
                 "Juventus": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Juventus_FC_2017_logo.svg/1200px-Juventus_FC_2017_logo.svg.png",
                 "Borussia Dortmund": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Borussia_Dortmund_logo.svg/1200px-Borussia_Dortmund_logo.svg.png",
+                "Raja Club Athletic": "https://upload.wikimedia.org/wikipedia/en/thumb/0/03/Raja_Casablanca_logo.svg/1200px-Raja_Casablanca_logo.svg.png",
+                "Monaco": "https://upload.wikimedia.org/wikipedia/en/thumb/4/4c/AS_Monaco_FC.svg/1200px-AS_Monaco_FC.svg.png",
+                "Galatasaray": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Galatasaray_Star_Logo.svg/1200px-Galatasaray_Star_Logo.svg.png",
+                "Benfica": "https://upload.wikimedia.org/wikipedia/en/thumb/a/a2/SL_Benfica_logo.svg/1200px-SL_Benfica_logo.svg.png",
                 "Flamengo": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Flamengo_brazilian_v_final.svg/1200px-Flamengo_brazilian_v_final.svg.png",
-                "Raja Club Athletic": "https://upload.wikimedia.org/wikipedia/en/thumb/0/03/Raja_Casablanca_logo.svg/1200px-Raja_Casablanca_logo.svg.png"
+                "Nashville": "https://upload.wikimedia.org/wikipedia/en/thumb/c/c3/Nashville_SC_logo.svg/1200px-Nashville_SC_logo.svg.png"
             };
             return map[name] || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=1e3a8a&color=fff&bold=true`;
         }
 
-        function renderMatches(q = "") {
+        function renderForm(form) {
+            if (!form) return '';
+            return form.map(res => `<span class="form-dot ${res === 'W' ? 'win' : res === 'D' ? 'draw' : 'loss'}">${res}</span>`).join(' ');
+        }
+
+        function renderMatches() {
             const grid = document.getElementById('matchGrid');
-            const filtered = matches.filter(m => m.home.toLowerCase().includes(q.toLowerCase()) || m.away.toLowerCase().includes(q.toLowerCase()) || m.league.toLowerCase().includes(q.toLowerCase()));
-            
-            grid.innerHTML = filtered.map(m => `
+            grid.innerHTML = matches.map(m => `
                 <div class="glass p-8 rounded-[2.5rem] border border-white/5 flex flex-col gap-6">
                     <div class="flex justify-between items-center">
                         <span class="bg-blue-600/10 text-blue-500 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">${m.league}</span>
@@ -190,20 +317,17 @@
                     <div class="flex items-center justify-between">
                         <div class="flex flex-col items-center gap-3 w-1/3">
                             <div class="logo-wrapper"><img src="${getLogo(m.home)}" onerror="this.src='https://ui-avatars.com/api/?name=${m.home}'"></div>
-                            <span class="text-[10px] font-bold text-center">${m.home}</span>
+                            <span class="text-[10px] font-black text-center h-8 flex items-center">${m.home}</span>
                         </div>
                         <div class="flex flex-col items-center">
-                            ${m.status === 'Finished' ? `<span class="text-2xl font-black text-blue-500">${m.score}</span>` : '<span class="text-xs font-black text-slate-800">VS</span>'}
+                            <span class="text-xs font-black text-slate-800 italic uppercase">vs</span>
                         </div>
                         <div class="flex flex-col items-center gap-3 w-1/3">
                             <div class="logo-wrapper"><img src="${getLogo(m.away)}" onerror="this.src='https://ui-avatars.com/api/?name=${m.away}'"></div>
-                            <span class="text-[10px] font-bold text-center">${m.away}</span>
+                            <span class="text-[10px] font-black text-center h-8 flex items-center">${m.away}</span>
                         </div>
                     </div>
-                    ${m.status === 'Finished' || m.status === 'Postponed' ? 
-                        `<div class="w-full bg-slate-900/50 py-3 rounded-2xl text-center text-[10px] text-slate-500 font-bold uppercase">${m.status || 'FT'}</div>` : 
-                        `<button onclick="openAnalysis(${m.id})" class="w-full bg-blue-600 py-3.5 rounded-2xl text-[11px] font-black uppercase tracking-widest shadow-lg shadow-blue-600/20">Analyze</button>`
-                    }
+                    <button onclick="openAnalysis(${m.id})" class="w-full bg-blue-600 py-4 rounded-2xl text-[11px] font-black uppercase tracking-widest shadow-lg shadow-blue-600/20 active:scale-95 transition-all">Detailed Analysis</button>
                 </div>
             `).join('');
         }
@@ -211,7 +335,6 @@
         function showPage(page) {
             document.getElementById('homePage').classList.toggle('hidden', page !== 'home');
             document.getElementById('sportyPage').classList.toggle('hidden', page !== 'sporty');
-            document.getElementById('searchContainer').classList.toggle('hidden', page !== 'home');
             if(page === 'sporty') filterCodes('medium', document.querySelector('.tab-btn.active'));
         }
 
@@ -221,33 +344,23 @@
                 btn.classList.add('active');
                 if(cat === 'virtual') btn.classList.add('virtual-active');
             }
-            
             const container = document.getElementById('codesContainer');
             const list = sportyCodes[cat] || [];
-            
             if(list.length === 0) {
-                container.innerHTML = `
-                    <div class="py-20 text-center glass rounded-[2.5rem] flex flex-col items-center">
-                        <i class="fas ${cat === 'virtual' ? 'fa-bolt-lightning text-purple-500' : 'fa-clock text-slate-600'} text-3xl mb-4"></i>
-                        <p class="text-white font-black uppercase tracking-widest text-sm">${cat === 'virtual' ? 'Next code in 30 minutes' : 'Codes Loading...'}</p>
-                    </div>`;
+                container.innerHTML = `<div class="py-20 text-center glass rounded-[2.5rem] flex flex-col items-center border-white/5"><i class="fas ${cat === 'virtual' ? 'fa-bolt-lightning text-purple-500' : 'fa-clock text-slate-600'} text-3xl mb-4"></i><p class="text-white font-black uppercase tracking-widest text-sm">${cat === 'virtual' ? 'Next code in 30 minutes' : 'Loading...'}</p></div>`;
                 return;
             }
-
             container.innerHTML = list.map(item => `
                 <div class="code-card p-8 rounded-[2rem] flex flex-col md:flex-row justify-between items-center gap-6">
                     <div class="flex items-center gap-5">
-                        <div class="w-14 h-14 rounded-2xl bg-red-500/10 flex items-center justify-center text-red-500 border border-red-500/20"><i class="fas fa-ticket-alt text-xl"></i></div>
-                        <div><h4 class="text-white font-black">${item.label}</h4><p class="text-slate-500 text-[10px] font-bold uppercase">${item.desc}</p></div>
+                        <div class="w-14 h-14 rounded-2xl bg-red-500/10 flex items-center justify-center text-red-500 border border-red-500/20"><i class="fas fa-receipt text-xl"></i></div>
+                        <div><h4 class="text-white font-black">${item.label}</h4><p class="text-slate-500 text-[10px] font-bold uppercase tracking-widest">${item.desc}</p></div>
                     </div>
                     <div class="flex items-center gap-4 w-full md:w-auto">
                         <div class="flex-1 md:flex-none bg-black px-6 py-4 rounded-xl border border-white/5 text-center"><span class="text-2xl font-black text-white tracking-widest">${item.code}</span></div>
-                        <button onclick="copyCode('${item.code}', this)" class="h-14 px-6 bg-white text-black font-black rounded-xl flex items-center gap-2 hover:bg-slate-200 shadow-xl">
-                            <i class="fas fa-copy"></i> <span class="text-xs uppercase">Copy</span>
-                        </button>
+                        <button onclick="copyCode('${item.code}', this)" class="h-14 px-6 bg-white text-black font-black rounded-xl flex items-center gap-2 hover:bg-slate-200 transition-all active:scale-95 shadow-xl"><i class="fas fa-copy text-xs"></i> <span class="text-xs uppercase font-black">Copy</span></button>
                     </div>
-                </div>
-            `).join('');
+                </div>`).join('');
         }
 
         function copyCode(text, btn) {
@@ -262,22 +375,63 @@
             const m = matches.find(x => x.id === id);
             const modalBody = document.getElementById('modalBody');
             modalBody.innerHTML = `
-                <div class="space-y-8">
-                    <div class="flex justify-around items-center bg-slate-900/50 p-8 rounded-[2rem] border border-white/5">
-                        <div class="text-center w-1/3"><img src="${getLogo(m.home)}" class="w-16 h-16 mb-2 mx-auto"><span class="text-[10px] font-black">${m.home}</span></div>
-                        <div class="text-2xl font-black italic text-slate-800">VS</div>
-                        <div class="text-center w-1/3"><img src="${getLogo(m.away)}" class="w-16 h-16 mb-2 mx-auto"><span class="text-[10px] font-black">${m.away}</span></div>
+                <div class="space-y-6">
+                    <!-- Head to Head -->
+                    <div class="flex justify-around items-center bg-slate-900/50 p-6 rounded-3xl border border-white/5">
+                        <div class="text-center w-1/3">
+                            <img src="${getLogo(m.home)}" class="w-14 h-14 mb-2 mx-auto">
+                            <p class="text-[10px] font-black text-white uppercase">${m.home}</p>
+                            <div class="mt-2 flex justify-center gap-1">${renderForm(m.homeForm)}</div>
+                        </div>
+                        <div class="text-center px-4">
+                            <span class="text-[10px] font-black text-slate-500 uppercase block mb-1">H2H</span>
+                            <span class="text-xs font-black text-blue-500 tracking-tighter">${m.h2h}</span>
+                        </div>
+                        <div class="text-center w-1/3">
+                            <img src="${getLogo(m.away)}" class="w-14 h-14 mb-2 mx-auto">
+                            <p class="text-[10px] font-black text-white uppercase">${m.away}</p>
+                            <div class="mt-2 flex justify-center gap-1">${renderForm(m.awayForm)}</div>
+                        </div>
                     </div>
-                    <div class="p-8 bg-blue-600 rounded-[2rem] text-white shadow-xl shadow-blue-600/20">
-                        <h4 class="text-[10px] font-black uppercase tracking-widest mb-2 opacity-70">Expert Opinion</h4>
-                        <p class="text-sm font-bold leading-relaxed">${m.reason || 'High stakes match. Expect tactical battle with focus on midfield control.'}</p>
+
+                    <!-- Standing & Lineups -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-slate-900 p-6 rounded-3xl border border-white/5">
+                            <h4 class="text-[10px] font-black text-blue-500 uppercase mb-3 flex items-center gap-2">
+                                <i class="fas fa-list-ol"></i> League Standing
+                            </h4>
+                            <p class="text-xs text-white leading-relaxed font-bold italic">${m.standing}</p>
+                        </div>
+                        <div class="bg-slate-900 p-6 rounded-3xl border border-white/5">
+                            <h4 class="text-[10px] font-black text-green-500 uppercase mb-3 flex items-center gap-2">
+                                <i class="fas fa-users"></i> Predicted Lineups
+                            </h4>
+                            <p class="text-[10px] text-slate-400 leading-relaxed font-medium">${m.lineups || 'Lineups not available for this fixture type.'}</p>
+                        </div>
+                    </div>
+
+                    <!-- Full Tactical Reason -->
+                    <div class="p-8 bg-blue-600 rounded-[2.5rem] text-white shadow-2xl shadow-blue-600/30">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center"><i class="fas fa-brain"></i></div>
+                            <h4 class="text-[10px] font-black uppercase tracking-[0.2em]">RaphBets Tactical Masterclass</h4>
+                        </div>
+                        <p class="text-sm font-bold leading-relaxed border-l-4 border-white/20 pl-4">${m.reason}</p>
+                    </div>
+
+                    <!-- Recommended Market -->
+                    <div class="bg-green-600/20 p-6 rounded-3xl border border-green-500/20 flex justify-between items-center">
+                        <div>
+                            <p class="text-[10px] font-black text-green-500 uppercase tracking-widest">High Confidence Market</p>
+                            <p class="text-xs font-bold text-white mt-1">Available in Daily VIP Slip</p>
+                        </div>
+                        <i class="fas fa-shield-halved text-green-500 text-xl"></i>
                     </div>
                 </div>`;
             document.getElementById('modal').classList.remove('hidden');
         }
 
         function closeModal() { document.getElementById('modal').classList.add('hidden'); }
-        document.getElementById('searchInput').addEventListener('input', (e) => renderMatches(e.target.value));
         
         window.onload = () => {
             renderMatches();
